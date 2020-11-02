@@ -1,16 +1,16 @@
 {
-  "name": "@editorjs/image",
+  "name": "@editorjs/video",
   "version": "2.6.0",
   "keywords": [
     "codex editor",
     "tool",
-    "image",
+    "video",
     "editor.js",
     "editorjs"
   ],
-  "description": "Image Tool for Editor.js",
+  "description": "Video Tool for Editor.js",
   "license": "MIT",
-  "repository": "https://github.com/editor-js/image",
+  "repository": "https://github.com/sankad/video",
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",

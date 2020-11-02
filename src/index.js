@@ -1,9 +1,9 @@
 /**
- * Image Tool for the Editor.js
+ * Video Tool for the Editor.js
  *
  * @author CodeX <team@codex.so>
  * @license MIT
- * @see {@link https://github.com/editor-js/image}
+ * @see {@link https://github.com/editor-js/video}
  *
  * To developers.
  * To simplify Tool structure, we split it to 4 parts:
@@ -19,8 +19,8 @@
  *
  * It will expose 8008 port, so you can pass http://localhost:8008 with the Tools config:
  *
- * image: {
- *   class: ImageTool,
+ * video: {
+ *   class: VideoTool,
  *   config: {
  *     endpoints: {
  *       byFile: 'http://localhost:8008/uploadFile',
@@ -31,14 +31,14 @@
  */
 
 /**
- * @typedef {object} ImageToolData
- * @description Image Tool's input and output data format
- * @property {string} caption — image caption
- * @property {boolean} withBorder - should image be rendered with border
- * @property {boolean} withBackground - should image be rendered with background
- * @property {boolean} stretched - should image be stretched to full width of container
- * @property {object} file — Image file data returned from backend
- * @property {string} file.url — image URL
+ * @typedef {object} VideoToolData
+ * @description Video Tool's input and output data format
+ * @property {string} caption — video caption
+ * @property {boolean} withBorder - should video be rendered with border
+ * @property {boolean} withBackground - should video be rendered with background
+ * @property {boolean} stretched - should video be stretched to full width of container
+ * @property {object} file — Video file data returned from backend
+ * @property {string} file.url — video URL
  */
 
 // eslint-disable-next-line
@@ -49,20 +49,20 @@ import ToolboxIcon from './svg/toolbox.svg';
 import Uploader from './uploader';
 
 /**
- * @typedef {object} ImageConfig
+ * @typedef {object} VideoConfig
  * @description Config supported by Tool
  * @property {object} endpoints - upload endpoints
  * @property {string} endpoints.byFile - upload by file
  * @property {string} endpoints.byUrl - upload by URL
- * @property {string} field - field name for uploaded image
+ * @property {string} field - field name for uploaded video
  * @property {string} types - available mime-types
  * @property {string} captionPlaceholder - placeholder for Caption field
  * @property {object} additionalRequestData - any data to send with requests
  * @property {object} additionalRequestHeaders - allows to pass custom headers with Request
  * @property {string} buttonContent - overrides for Select File button
  * @property {object} [uploader] - optional custom uploader
- * @property {function(File): Promise.<UploadResponseFormat>} [uploader.uploadByFile] - method that upload image by File
- * @property {function(string): Promise.<UploadResponseFormat>} [uploader.uploadByUrl] - method that upload image by URL
+ * @property {function(File): Promise.<UploadResponseFormat>} [uploader.uploadByFile] - method that upload video by File
+ * @property {function(string): Promise.<UploadResponseFormat>} [uploader.uploadByUrl] - method that upload video by URL
  */
 
 /**
@@ -72,9 +72,9 @@ import Uploader from './uploader';
  * @property {object} file - Object with file data.
  *                           'url' is required,
  *                           also can contain any additional data that will be saved and passed back
- * @property {string} file.url - [Required] image source URL
+ * @property {string} file.url - [Required] video source URL
  */
-export default class ImageTool {
+export default class VideoTool {
   /**
    * Notify core that read-only mode is supported
    *
@@ -94,14 +94,14 @@ export default class ImageTool {
   static get toolbox() {
     return {
       icon: ToolboxIcon,
-      title: 'Image',
+      title: 'Video',
     };
   }
 
   /**
    * @param {object} tool - tool properties got from editor.js
-   * @param {ImageToolData} tool.data - previously saved data
-   * @param {ImageConfig} tool.config - user config for Tool
+   * @param {VideoToolData} tool.data - previously saved data
+   * @param {VideoConfig} tool.config - user config for Tool
    * @param {object} tool.api - Editor.js API
    * @param {boolean} tool.readOnly - read-only mode flag
    */
@@ -116,8 +116,8 @@ export default class ImageTool {
       endpoints: config.endpoints || '',
       additionalRequestData: config.additionalRequestData || {},
       additionalRequestHeaders: config.additionalRequestHeaders || {},
-      field: config.field || 'image',
-      types: config.types || 'image/*',
+      field: config.field || 'video',
+      types: config.types || 'video/*',
       captionPlaceholder: this.api.i18n.t(config.captionPlaceholder || 'Caption'),
       buttonContent: config.buttonContent || '',
       uploader: config.uploader || undefined,
@@ -181,7 +181,7 @@ export default class ImageTool {
    *
    * @public
    *
-   * @returns {ImageToolData}
+   * @returns {VideoToolData}
    */
   save() {
     const caption = this.ui.nodes.caption;
@@ -192,7 +192,7 @@ export default class ImageTool {
   }
 
   /**
-   * Makes buttons with tunes: add background, add border, stretch image
+   * Makes buttons with tunes: add background, add border, stretch video
    *
    * @public
    *
@@ -203,7 +203,7 @@ export default class ImageTool {
   }
 
   /**
-   * Fires after clicks on the Toolbox Image Icon
+   * Fires after clicks on the Toolbox Video Icon
    * Initiates click on the Select File button
    *
    * @public
@@ -223,20 +223,20 @@ export default class ImageTool {
       /**
        * Paste HTML into Editor
        */
-      tags: [ 'img' ],
+      tags: [ 'video' ],
 
       /**
-       * Paste URL of image into the Editor
+       * Paste URL of video into the Editor
        */
       patterns: {
-        image: /https?:\/\/\S+\.(gif|jpe?g|tiff|png)$/i,
+        video: /https?:\/\/\S+\.(mp4)$/i,
       },
 
       /**
        * Drag n drop file from into the Editor
        */
       files: {
-        mimeTypes: [ 'image/*' ],
+        mimeTypes: [ 'video/*' ],
       },
     };
   }
@@ -253,18 +253,18 @@ export default class ImageTool {
   async onPaste(event) {
     switch (event.type) {
       case 'tag': {
-        const image = event.detail.data;
+        const video = event.detail.data;
 
-        /** Images from PDF */
-        if (/^blob:/.test(image.src)) {
-          const response = await fetch(image.src);
+        /** Videos from PDF */
+        if (/^blob:/.test(video.src)) {
+          const response = await fetch(video.src);
           const file = await response.blob();
 
           this.uploadFile(file);
           break;
         }
 
-        this.uploadUrl(image.src);
+        this.uploadUrl(video.src);
         break;
       }
       case 'pattern': {
@@ -292,10 +292,10 @@ export default class ImageTool {
    *
    * @private
    *
-   * @param {ImageToolData} data - data in Image Tool format
+   * @param {VideoToolData} data - data in Video Tool format
    */
   set data(data) {
-    this.image = data.file;
+    this.video = data.file;
 
     this._data.caption = data.caption || '';
     this.ui.fillCaption(this._data.caption);
@@ -312,24 +312,24 @@ export default class ImageTool {
    *
    * @private
    *
-   * @returns {ImageToolData}
+   * @returns {VideoToolData}
    */
   get data() {
     return this._data;
   }
 
   /**
-   * Set new image file
+   * Set new video file
    *
    * @private
    *
    * @param {object} file - uploaded file data
    */
-  set image(file) {
+  set video(file) {
     this._data.file = file || {};
 
     if (file && file.url) {
-      this.ui.fillImage(file.url);
+      this.ui.fillVideo(file.url);
     }
   }
 
@@ -343,7 +343,7 @@ export default class ImageTool {
    */
   onUpload(response) {
     if (response.success && response.file) {
-      this.image = response.file;
+      this.video = response.file;
     } else {
       this.uploadingFailed('incorrect response: ' + JSON.stringify(response));
     }
@@ -357,10 +357,10 @@ export default class ImageTool {
    * @returns {void}
    */
   uploadingFailed(errorText) {
-    console.log('Image Tool: uploading failed because of', errorText);
+    console.log('Video Tool: uploading failed because of', errorText);
 
     this.api.notifier.show({
-      message: this.api.i18n.t('Couldn’t upload image. Please try another.'),
+      message: this.api.i18n.t('Couldn’t upload video. Please try another.'),
       style: 'error',
     });
     this.ui.hidePreloader();
@@ -407,7 +407,7 @@ export default class ImageTool {
   }
 
   /**
-   * Show preloader and upload image file
+   * Show preloader and upload video file
    *
    * @param {File} file - file that is currently uploading (from paste)
    * @returns {void}
@@ -421,7 +421,7 @@ export default class ImageTool {
   }
 
   /**
-   * Show preloader and upload image by target url
+   * Show preloader and upload video by target url
    *
    * @param {string} url - url pasted
    * @returns {void}

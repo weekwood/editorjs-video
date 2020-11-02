@@ -8,9 +8,9 @@ import buttonIcon from './svg/button-icon.svg';
  */
 export default class Ui {
   /**
-   * @param {object} ui - image tool Ui module
+   * @param {object} ui - video tool Ui module
    * @param {object} ui.api - Editor.js API
-   * @param {ImageConfig} ui.config - user config
+   * @param {VideoConfig} ui.config - user config
    * @param {Function} ui.onSelectFile - callback for clicks on Select file button
    * @param {boolean} ui.readOnly - read-only mode flag
    */
@@ -21,10 +21,10 @@ export default class Ui {
     this.readOnly = readOnly;
     this.nodes = {
       wrapper: make('div', [this.CSS.baseClass, this.CSS.wrapper]),
-      imageContainer: make('div', [ this.CSS.imageContainer ]),
+      videoContainer: make('div', [ this.CSS.videoContainer ]),
       fileButton: this.createFileButton(),
-      imageEl: undefined,
-      imagePreloader: make('div', this.CSS.imagePreloader),
+      videoEl: undefined,
+      videoPreloader: make('video', this.CSS.videoPreloader),
       caption: make('div', [this.CSS.input, this.CSS.caption], {
         contentEditable: !this.readOnly,
       }),
@@ -33,16 +33,16 @@ export default class Ui {
     /**
      * Create base structure
      *  <wrapper>
-     *    <image-container>
-     *      <image-preloader />
-     *    </image-container>
+     *    <video-container>
+     *      <video-preloader />
+     *    </video-container>
      *    <caption />
      *    <select-file-button />
      *  </wrapper>
      */
     this.nodes.caption.dataset.placeholder = this.config.captionPlaceholder;
-    this.nodes.imageContainer.appendChild(this.nodes.imagePreloader);
-    this.nodes.wrapper.appendChild(this.nodes.imageContainer);
+    this.nodes.videoContainer.appendChild(this.nodes.videoPreloader);
+    this.nodes.wrapper.appendChild(this.nodes.videoContainer);
     this.nodes.wrapper.appendChild(this.nodes.caption);
     this.nodes.wrapper.appendChild(this.nodes.fileButton);
   }
@@ -62,11 +62,11 @@ export default class Ui {
       /**
        * Tool's classes
        */
-      wrapper: 'image-tool',
-      imageContainer: 'image-tool__image',
-      imagePreloader: 'image-tool__image-preloader',
-      imageEl: 'image-tool__image-picture',
-      caption: 'image-tool__caption',
+      wrapper: 'video-tool',
+      videoContainer: 'video-tool__video',
+      videoPreloader: 'video-tool__video-preloader',
+      videoEl: 'video-tool__video-picture',
+      caption: 'video-tool__caption',
     };
   };
 
@@ -89,10 +89,12 @@ export default class Ui {
   /**
    * Renders tool UI
    *
-   * @param {ImageToolData} toolData - saved tool data
+   * @param {VideoToolData} toolData - saved tool data
    * @returns {Element}
    */
   render(toolData) {
+    console.log('xxxx : render:toolData');
+    console.debug(toolData);
     if (!toolData.file || Object.keys(toolData.file).length === 0) {
       this.toggleStatus(Ui.status.EMPTY);
     } else {
@@ -110,7 +112,7 @@ export default class Ui {
   createFileButton() {
     const button = make('div', [ this.CSS.button ]);
 
-    button.innerHTML = this.config.buttonContent || `${buttonIcon} ${this.api.i18n.t('Select an Image')}`;
+    button.innerHTML = this.config.buttonContent || `${buttonIcon} ${this.api.i18n.t('Select an Video')}`;
 
     button.addEventListener('click', () => {
       this.onSelectFile();
@@ -126,7 +128,7 @@ export default class Ui {
    * @returns {void}
    */
   showPreloader(src) {
-    this.nodes.imagePreloader.style.backgroundImage = `url(${src})`;
+    this.nodes.videoPreloader.src = `url(${src})`;
 
     this.toggleStatus(Ui.status.UPLOADING);
   }
@@ -137,21 +139,21 @@ export default class Ui {
    * @returns {void}
    */
   hidePreloader() {
-    this.nodes.imagePreloader.style.backgroundImage = '';
+    this.nodes.videoPreloader.src = '';
     this.toggleStatus(Ui.status.EMPTY);
   }
 
   /**
-   * Shows an image
+   * Shows an video
    *
-   * @param {string} url - image source
+   * @param {string} url - video source
    * @returns {void}
    */
-  fillImage(url) {
+  fillVideo(url) {
     /**
      * Check for a source extension to compose element correctly: video tag for mp4, img — for others
      */
-    const tag = /\.mp4$/.test(url) ? 'VIDEO' : 'IMG';
+    const tag = 'VIDEO';
 
     const attributes = {
       src: url,
@@ -169,47 +171,54 @@ export default class Ui {
     /**
      * Update attributes and eventName if source is a mp4 video
      */
-    if (tag === 'VIDEO') {
-      /**
-       * Add attributes for playing muted mp4 as a gif
-       *
-       * @type {boolean}
-       */
-      attributes.autoplay = true;
-      attributes.loop = true;
-      attributes.muted = true;
-      attributes.playsinline = true;
+    /**
+     * Add attributes for playing muted mp4 as a gif
+     *
+     * @type {boolean}
+     */
+    attributes.autoplay = true;
+    attributes.loop = true;
+    attributes.muted = true;
+    attributes.playsinline = true;
 
-      /**
-       * Change event to be listened
-       *
-       * @type {string}
-       */
-      eventName = 'loadeddata';
-    }
+    /**
+     * Change event to be listened
+     *
+     * @type {string}
+     */
+    eventName = 'loadeddata';
 
     /**
      * Compose tag with defined attributes
      *
      * @type {Element}
      */
-    this.nodes.imageEl = make(tag, this.CSS.imageEl, attributes);
-
+    this.nodes.videoEl = make(tag, this.CSS.videoEl, attributes);
+    this.nodes.videoEl.addEventListener('load', () => {
+      console.log('xxxx : load');
+    });
+    this.nodes.videoEl.onloadeddata = () => {
+      console.log('xxxx : onloadeddata');
+    };
+    this.nodes.videoEl.onload = () => {
+      console.log('xxxx : onload');
+    };
     /**
      * Add load event listener
      */
-    this.nodes.imageEl.addEventListener(eventName, () => {
+    this.nodes.videoEl.addEventListener(eventName, () => {
+      console.log('xxxx : video : ' + eventName);
       this.toggleStatus(Ui.status.FILLED);
 
       /**
        * Preloader does not exists on first rendering with presaved data
        */
-      if (this.nodes.imagePreloader) {
-        this.nodes.imagePreloader.style.backgroundImage = '';
+      if (this.nodes.videoPreloader) {
+        this.nodes.videoPreloader.src = '';
       }
     });
 
-    this.nodes.imageContainer.appendChild(this.nodes.imageEl);
+    this.nodes.videoContainer.appendChild(this.nodes.videoEl);
   }
 
   /**

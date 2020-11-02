@@ -8,7 +8,7 @@ import stretchedIcon from './svg/stretched.svg';
  */
 export default class Tunes {
   /**
-   * @param {object} tune - image tool Tunes managers
+   * @param {object} tune - video tool Tunes managers
    * @param {object} tune.api - Editor API
    * @param {object} tune.actions - list of user defined tunes
    * @param {Function} tune.onChange - tune toggling callback
@@ -21,7 +21,7 @@ export default class Tunes {
   }
 
   /**
-   * Available Image tunes
+   * Available Video tunes
    *
    * @returns {{name: string, icon: string, title: string}[]}
    */
@@ -35,7 +35,7 @@ export default class Tunes {
       {
         name: 'stretched',
         icon: stretchedIcon,
-        title: 'Stretch image',
+        title: 'Stretch video',
       },
       {
         name: 'withBackground',
@@ -54,15 +54,15 @@ export default class Tunes {
     return {
       wrapper: '',
       buttonBase: this.api.styles.settingsButton,
-      button: 'image-tool__tune',
+      button: 'video-tool__tune',
       buttonActive: this.api.styles.settingsButtonActive,
     };
   }
 
   /**
-   * Makes buttons with tunes: add background, add border, stretch image
+   * Makes buttons with tunes: add background, add border, stretch video
    *
-   * @param {ImageToolData} toolData - generate Elements of tunes
+   * @param {VideoToolData} toolData - generate Elements of tunes
    * @returns {Element}
    */
   render(toolData) {

@@ -9,7 +9,7 @@ import ajax from '@codexteam/ajax';
 export default class Uploader {
   /**
    * @param {object} params - uploader module params
-   * @param {ImageConfig} params.config - image tool config
+   * @param {VideoConfig} params.config - video tool config
    * @param {Function} params.onUpload - one callback for all uploading (file, url, d-n-d, pasting)
    * @param {Function} params.onError - callback for uploading errors
    */
@@ -80,7 +80,7 @@ export default class Uploader {
    * Handle clicks on the upload file button
    * Fires ajax.post()
    *
-   * @param {string} url - image source url
+   * @param {string} url - video source url
    */
   uploadByUrl(url) {
     let upload;
