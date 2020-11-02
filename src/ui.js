@@ -93,7 +93,6 @@ export default class Ui {
    * @returns {Element}
    */
   render(toolData) {
-    console.log('xxxx : render:toolData');
     console.debug(toolData);
     if (!toolData.file || Object.keys(toolData.file).length === 0) {
       this.toggleStatus(Ui.status.EMPTY);
@@ -194,20 +193,10 @@ export default class Ui {
      * @type {Element}
      */
     this.nodes.videoEl = make(tag, this.CSS.videoEl, attributes);
-    this.nodes.videoEl.addEventListener('load', () => {
-      console.log('xxxx : load');
-    });
-    this.nodes.videoEl.onloadeddata = () => {
-      console.log('xxxx : onloadeddata');
-    };
-    this.nodes.videoEl.onload = () => {
-      console.log('xxxx : onload');
-    };
     /**
      * Add load event listener
      */
     this.nodes.videoEl.addEventListener(eventName, () => {
-      console.log('xxxx : video : ' + eventName);
       this.toggleStatus(Ui.status.FILLED);
 
       /**
