@@ -1,6 +1,6 @@
 {
-  "name": "@editorjs/video",
-  "version": "2.6.0",
+  "name": "@weekwood/editorjs-video",
+  "version": "1.0.0",
   "keywords": [
     "codex editor",
     "tool",
@@ -10,7 +10,7 @@
   ],
   "description": "Video Tool for Editor.js",
   "license": "MIT",
-  "repository": "https://github.com/sankad/video",
+  "repository": "https://github.com/weekwood/editorjs-video",
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
@@ -43,5 +43,8 @@
     "svg-inline-loader": "^0.8.0",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "react-player": "^2.9.0"
   }
 }

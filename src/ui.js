@@ -1,5 +1,5 @@
-import buttonIcon from './svg/button-icon.svg';
-
+import buttonIcon from "./svg/button-icon.svg";
+import renderReactPlayer from "react-player/lib/standalone";
 /**
  * Class for working with UI:
  *  - rendering base structure
@@ -20,12 +20,12 @@ export default class Ui {
     this.onSelectFile = onSelectFile;
     this.readOnly = readOnly;
     this.nodes = {
-      wrapper: make('div', [this.CSS.baseClass, this.CSS.wrapper]),
-      videoContainer: make('div', [ this.CSS.videoContainer ]),
+      wrapper: make("div", [this.CSS.baseClass, this.CSS.wrapper]),
+      videoContainer: make("div", [this.CSS.videoContainer]),
       fileButton: this.createFileButton(),
       videoEl: undefined,
-      videoPreloader: make('video', this.CSS.videoPreloader),
-      caption: make('div', [this.CSS.input, this.CSS.caption], {
+      videoPreloader: make("video", this.CSS.videoPreloader),
+      caption: make("div", [this.CSS.input, this.CSS.caption], {
         contentEditable: !this.readOnly,
       }),
     };
@@ -62,13 +62,13 @@ export default class Ui {
       /**
        * Tool's classes
        */
-      wrapper: 'video-tool',
-      videoContainer: 'video-tool__video',
-      videoPreloader: 'video-tool__video-preloader',
-      videoEl: 'video-tool__video-picture',
-      caption: 'video-tool__caption',
+      wrapper: "video-tool",
+      videoContainer: "video-tool__video",
+      videoPreloader: "video-tool__video-preloader",
+      videoEl: "video-tool__video-picture",
+      caption: "video-tool__caption",
     };
-  };
+  }
 
   /**
    * Ui statuses:
@@ -80,9 +80,9 @@ export default class Ui {
    */
   static get status() {
     return {
-      EMPTY: 'empty',
-      UPLOADING: 'loading',
-      FILLED: 'filled',
+      EMPTY: "empty",
+      UPLOADING: "loading",
+      FILLED: "filled",
     };
   }
 
@@ -109,11 +109,13 @@ export default class Ui {
    * @returns {Element}
    */
   createFileButton() {
-    const button = make('div', [ this.CSS.button ]);
+    const button = make("div", [this.CSS.button]);
 
-    button.innerHTML = this.config.buttonContent || `${buttonIcon} ${this.api.i18n.t('Select an Video')}`;
+    button.innerHTML =
+      this.config.buttonContent ||
+      `${buttonIcon} ${this.api.i18n.t("Select an Video")}`;
 
-    button.addEventListener('click', () => {
+    button.addEventListener("click", () => {
       this.onSelectFile();
     });
 
@@ -138,7 +140,7 @@ export default class Ui {
    * @returns {void}
    */
   hidePreloader() {
-    this.nodes.videoPreloader.src = '';
+    this.nodes.videoPreloader.src = "";
     this.toggleStatus(Ui.status.EMPTY);
   }
 
@@ -149,65 +151,12 @@ export default class Ui {
    * @returns {void}
    */
   fillVideo(url) {
-    /**
-     * Check for a source extension to compose element correctly: video tag for mp4, img — for others
-     */
-    const tag = 'VIDEO';
-
-    const attributes = {
-      src: url,
-    };
-
-    /**
-     * We use eventName variable because IMG and VIDEO tags have different event to be called on source load
-     * - IMG: load
-     * - VIDEO: loadeddata
-     *
-     * @type {string}
-     */
-    let eventName = 'load';
-
-    /**
-     * Update attributes and eventName if source is a mp4 video
-     */
-    /**
-     * Add attributes for playing muted mp4 as a gif
-     *
-     * @type {boolean}
-     */
-    attributes.autoplay = true;
-    attributes.loop = true;
-    attributes.muted = true;
-    attributes.playsinline = true;
-
-    /**
-     * Change event to be listened
-     *
-     * @type {string}
-     */
-    eventName = 'loadeddata';
-
-    /**
-     * Compose tag with defined attributes
-     *
-     * @type {Element}
-     */
-    this.nodes.videoEl = make(tag, this.CSS.videoEl, attributes);
-    /**
-     * Add load event listener
-     */
-    this.nodes.videoEl.addEventListener(eventName, () => {
-      this.toggleStatus(Ui.status.FILLED);
-
-      /**
-       * Preloader does not exists on first rendering with presaved data
-       */
-      if (this.nodes.videoPreloader) {
-        this.nodes.videoPreloader.src = '';
-      }
+    renderReactPlayer(this.nodes.videoContainer, {
+      url,
+      playing: true,
+      controls: true,
+      pip: true,
     });
-
-    this.nodes.videoContainer.appendChild(this.nodes.videoEl);
   }
 
   /**
@@ -231,7 +180,10 @@ export default class Ui {
   toggleStatus(status) {
     for (const statusType in Ui.status) {
       if (Object.prototype.hasOwnProperty.call(Ui.status, statusType)) {
-        this.nodes.wrapper.classList.toggle(`${this.CSS.wrapper}--${Ui.status[statusType]}`, status === Ui.status[statusType]);
+        this.nodes.wrapper.classList.toggle(
+          `${this.CSS.wrapper}--${Ui.status[statusType]}`,
+          status === Ui.status[statusType]
+        );
       }
     }
   }
@@ -244,7 +196,10 @@ export default class Ui {
    * @returns {void}
    */
   applyTune(tuneName, status) {
-    this.nodes.wrapper.classList.toggle(`${this.CSS.wrapper}--${tuneName}`, status);
+    this.nodes.wrapper.classList.toggle(
+      `${this.CSS.wrapper}--${tuneName}`,
+      status
+    );
   }
 }
 
