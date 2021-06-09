@@ -2,7 +2,7 @@
 
 # Video Tool
 
-Video Block for the [Editor.js](https://editorjs.io).
+Video Block for the [Editor.js](https://editorjs.io). Clone from [editor-js/image](https://github.com/editor-js/image)
 
 ![](https://capella.pics/63a03d04-3816-45b2-87b2-d85e556f0066.jpg)
 
@@ -19,7 +19,8 @@ Video Block for the [Editor.js](https://editorjs.io).
 
 This Tool requires server-side implementation for the file uploading. See [backend response format](#server-format) for more details.
 
-This Tool is also capable of uploading & displaying video files using the <video> element. To enable this, specify video mime-types via the 'types' config param.
+This Tool is also capable of uploading & displaying video files using the [React-player](https://github.com/CookPete/react-player)element. 
+
 
 
 ## Installation
@@ -29,7 +30,7 @@ This Tool is also capable of uploading & displaying video files using the <video
 Get the package
 
 ```shell
-npm i --save-dev @editorjs/video
+npm i --save-dev @weekwood/editorjs-video
 ```
 
 Include module at your application
@@ -44,14 +45,6 @@ import VideoTool from '@editorjs/video';
 
 1. Upload folder `dist` from repository
 2. Add `dist/bundle.js` file to your page.
-
-#### Loading from CDN
-
-You can load a specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/video).
-
-`https://cdn.jsdelivr.net/npm/@editorjs/video@2.3.0`
-
-Then require this script on page with Editor.js through the `<script src=""></script>` tag.
 
 ## Usage
 

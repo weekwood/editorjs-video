@@ -8,7 +8,7 @@
     "editor.js",
     "editorjs"
   ],
-  "description": "Video Tool for Editor.js",
+  "description": "Video Tool for Editor.js, clone from editorjs-image",
   "license": "MIT",
   "repository": "https://github.com/weekwood/editorjs-video",
   "main": "./dist/bundle.js",
@@ -20,8 +20,8 @@
     "lint:fix": "eslint src/ --ext .js --fix"
   },
   "author": {
-    "name": "CodeX",
-    "email": "team@ifmo.su"
+    "name": "Di Wu",
+    "email": "di.wu@me.com"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
