@@ -93,7 +93,6 @@ export default class Ui {
    * @returns {Element}
    */
   render(toolData) {
-    console.debug(toolData);
     if (!toolData.file || Object.keys(toolData.file).length === 0) {
       this.toggleStatus(Ui.status.EMPTY);
     } else {
@@ -153,9 +152,7 @@ export default class Ui {
   fillVideo(url) {
     renderReactPlayer(this.nodes.videoContainer, {
       url,
-      playing: true,
-      controls: true,
-      pip: true,
+      ...this.config.player,
     });
   }
 
