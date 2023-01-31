@@ -123,10 +123,13 @@ export default class VideoTool {
       uploader: config.uploader || undefined,
       actions: config.actions || [],
       player: {
-        pip: config.player.pip || false,
-        controls: config.player.controls || false,
-        light: config.player.light || false,
-        playing: config.player.playing || false,
+        ...{
+          pip: false,
+          controls: false,
+          light: false,
+          playing: false,
+        },
+        ...(config.player || {}),
       },
     };
 
