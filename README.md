@@ -264,7 +264,7 @@ var editor = EditorJS({
               return {
                 success: 1,
                 file: {
-                  url: 'https://codex.so/upload/redactor_videos/o_e48549d1855c7fc1807308dd14990126.jpg',,
+                  url: 'https://codex.so/upload/redactor_videos/o_e48549d1855c7fc1807308dd14990126.jpg',
                   // any other video data you want to store, such as width, height, color, extension, etc
                 }
               }
